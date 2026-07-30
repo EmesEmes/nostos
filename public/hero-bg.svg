@@ -1,0 +1,19 @@
+<!-- PLACEHOLDER del fondo del hero: paisaje andino en el estilo de línea
+     del proyecto. Reemplazar por la fotografía real del trabajo de campo
+     (ver comentario en components/home/Hero.tsx). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <rect width="1600" height="900" fill="#FAFAF7"/>
+  <g fill="none" stroke="#DEDBD1" stroke-width="2">
+    <path d="M-20,560 Q220,380 460,500 T900,440 T1340,520 T1660,460"/>
+    <path d="M-20,610 Q260,470 520,560 T980,510 T1420,590 T1660,540"/>
+  </g>
+  <g fill="none" stroke="#7A8B5C" stroke-width="2.5" opacity="0.55">
+    <path d="M-20,700 Q300,540 620,650 T1180,600 T1660,660"/>
+  </g>
+  <g fill="none" stroke="#5C6B45" stroke-width="2" opacity="0.5">
+    <path d="M-20,790 Q340,660 700,740 T1300,700 T1660,760"/>
+    <path d="M690,742 v-26 l14,-12 14,12 v26 M704,742 v-16"/>
+    <path d="M740,738 v-20 l11,-10 11,10 v20"/>
+    <path d="M660,748 v-16 l9,-8 9,8 v16"/>
+  </g>
+</svg>

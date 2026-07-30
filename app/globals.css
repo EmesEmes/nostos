@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Ecuador Vacío — estilos globales.
+  La paleta vive también como variables CSS para poder usarla
+  fuera de Tailwind (charts, three.js, SVG inline).
+*/
+:root {
+  --paper: #fafaf7;
+  --paper-alt: #f0efe8;
+  --moss: #7a8b5c;
+  --moss-dark: #5c6b45;
+  --ink: #2e2c28;
+  --ink-soft: #6b6862;
+  --hairline: #dedbd1;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Si el sistema pide menos movimiento, el scroll también deja de ser animado. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Foco visible y coherente con la paleta (accesibilidad de teclado). */
+:focus-visible {
+  outline: 2px solid var(--moss-dark);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: var(--moss);
+  color: var(--paper);
+}
+
+/*
+  Indicador de scroll del hero: bounce sutil e infinito (~1.5s por ciclo,
+  amplitud pequeña). Se apaga por completo con prefers-reduced-motion.
+*/
+@keyframes scroll-hint {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-hint {
+    animation: none;
+  }
+}
