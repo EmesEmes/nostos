@@ -19,9 +19,9 @@ export const translations = {
     hero: {
       // PLACEHOLDER: parroquia y cifras de ejemplo.
       kicker: "Nostos",
-      line1: "Hay territorios del Ecuador que llevan más de treinta años vaciándose.",
-      line2:
-        "Desde 1990, 28 cantones pierden población de forma continua.",
+      line1:
+        "Hay territorios del Ecuador que llevan más de treinta años vaciándose.",
+      line2: "Desde 1990, 28 cantones pierden población de forma continua.",
       subtitle:
         "Una investigación sobre las parroquias de Ecuador que se quedan sin gente.",
       scrollHint: "Desliza para leer",
@@ -46,7 +46,8 @@ export const translations = {
     magnitude: {
       title: "No es un pueblo. Es un patrón.",
       // Dato real del cliente (análisis 1990–2022).
-      counterSuffix: "cantones mantienen un proceso persistente de despoblación desde 1990",
+      counterSuffix:
+        "cantones mantienen un proceso persistente de despoblación desde 1990",
       counterValue: 28,
       body: "El análisis de la evolución demográfica evidencia que 28 cantones del país han registrado tasas de crecimiento poblacional negativas de forma continua desde 1990: la despoblación constituye un proceso estructural y de largo plazo en estos territorios, más que una fluctuación demográfica temporal.",
     },
@@ -54,21 +55,20 @@ export const translations = {
       title: "El mapa vivo",
       lead: "Antes de los nombres y de las cifras, el territorio.",
       intro:
-        "Veinticuatro provincias. Señalados, los diez cantones con mayor decrecimiento del país. Toca un punto para conocer su situación.",
-      loading: "Cargando el mapa…",
-      staticNote:
-        "Versión sin animación activada según la preferencia de movimiento reducido de tu sistema.",
-      mobileHint: "Arrastra para girar el mapa. Toca un punto para abrir su ficha.",
+        "Veinticuatro provincias. Toca una para conocer su dinámica poblacional 1990–2022.",
+      mobileHint: "Toca una provincia para abrir su ficha.",
       legendTitle: "Dinámica poblacional 1990–2022",
       legendDecline: "Decrecimiento sostenido",
       legendWeak: "Transición al decrecimiento",
       legendNormal: "Crecimiento",
       provincial: {
-        title: "Cañar y Loja presentan procesos sostenidos de decrecimiento poblacional",
+        title:
+          "Cañar y Loja presentan procesos sostenidos de decrecimiento poblacional",
         p1: "Entre 1990 y 2022, Cañar y Loja fueron las únicas provincias del Ecuador que registraron una disminución de su población en el conjunto del período analizado. A ellas se suman Chimborazo y Carchi, cuyas tendencias demográficas evidencian una desaceleración progresiva del crecimiento y una transición hacia escenarios de decrecimiento poblacional.",
         p2: "Estos resultados muestran que la pérdida de población no ocurre de manera homogénea en el territorio nacional, sino que se concentra especialmente en determinadas provincias de la Sierra, donde convergen dinámicas de emigración, envejecimiento demográfico y debilitamiento del crecimiento natural.",
       },
       panel: {
+        kicker: "Provincia",
         rateLabel: "Tasa anual promedio 1990–2022",
         zoneLabel: "Zona del análisis",
         population: "Población actual",
@@ -77,6 +77,8 @@ export const translations = {
         close: "Cerrar panel",
         visit: "Ver la historia completa",
         inhabitants: "habitantes",
+        noDeclineNote:
+          "Provincia con crecimiento poblacional según el análisis 1990–2022. No presenta cantones en decrecimiento identificados por el estudio.",
       },
     },
     numbers: {
@@ -147,7 +149,8 @@ export const translations = {
     },
     closing: {
       title: "Sobre NOSTOS",
-      etymology: "Nostos (νόστος): en griego, el viaje de regreso a casa. La raíz de la palabra nostalgia.",
+      etymology:
+        "Nostos (νόστος): en griego, el viaje de regreso a casa. La raíz de la palabra nostalgia.",
       body: "NOSTOS es un observatorio dedicado a generar evidencia científica sobre la despoblación rural y las transformaciones territoriales del Ecuador. Esta investigación doctoral, desarrollada en colaboración con agencias del sistema de Naciones Unidas, es su primer estudio. Los datos provienen de fuentes públicas oficiales; las historias, de la gente que sigue ahí.",
       credits: "Investigación y textos",
       creditsName: "Alexis Vallejo Mancero",
@@ -161,7 +164,11 @@ export const translations = {
       rights: "© 2026 NOSTOS. Los datos citados son de dominio público.",
     },
     numbersFlow: {
-      scrollHint: "Sigue bajando: los datos avanzan contigo",
+      hint: "Desliza o usa las flechas para recorrer los datos.",
+      prev: "Estadística anterior",
+      next: "Estadística siguiente",
+      goTo: "Ir a la estadística",
+      of: "de",
     },
     cantonal: {
       kicker: "Hallazgo territorial",
@@ -186,24 +193,29 @@ export const translations = {
       // del análisis 1990–2022; el cliente definirá el listado definitivo.
       items: [
         {
-          hypothesis: "Existe despoblación sostenida en territorios del Ecuador.",
+          hypothesis:
+            "Existe despoblación sostenida en territorios del Ecuador.",
           verdict: "confirmed",
-          evidence: "28 cantones registran tasas de crecimiento negativas de forma continua desde 1990 (INEC, censos 1990–2022).",
+          evidence:
+            "28 cantones registran tasas de crecimiento negativas de forma continua desde 1990 (INEC, censos 1990–2022).",
         },
         {
           hypothesis: "La despoblación es un fenómeno predominantemente rural.",
           verdict: "confirmed",
-          evidence: "Tesis central del estudio, sostenida por el análisis cantonal 1990–2022 del observatorio.",
+          evidence:
+            "Tesis central del estudio, sostenida por el análisis cantonal 1990–2022 del observatorio.",
         },
         {
           hypothesis: "La despoblación se concentra en la sierra sur.",
           verdict: "partial",
-          evidence: "Cañar y Loja son las únicas provincias con decrecimiento neto 1990–2022, pero aparecen focos fuera de la sierra sur, como Jama en la costa de Manabí (−0,62% anual).",
+          evidence:
+            "Cañar y Loja son las únicas provincias con decrecimiento neto 1990–2022, pero aparecen focos fuera de la sierra sur, como Jama en la costa de Manabí (−0,62% anual).",
         },
         {
           hypothesis: "El resto de la Sierra mantiene un crecimiento estable.",
           verdict: "rejected",
-          evidence: "Chimborazo y Carchi muestran una desaceleración progresiva del crecimiento y una transición hacia el decrecimiento poblacional.",
+          evidence:
+            "Chimborazo y Carchi muestran una desaceleración progresiva del crecimiento y una transición hacia el decrecimiento poblacional.",
         },
       ],
     },
@@ -269,9 +281,9 @@ export const translations = {
     },
     hero: {
       kicker: "Nostos",
-      line1: "There are territories in Ecuador that have been emptying for over thirty years.",
-      line2:
-        "Since 1990, 28 cantons have been losing population continuously.",
+      line1:
+        "There are territories in Ecuador that have been emptying for over thirty years.",
+      line2: "Since 1990, 28 cantons have been losing population continuously.",
       subtitle:
         "A research project on the parishes of Ecuador that are running out of people.",
       scrollHint: "Scroll to read",
@@ -291,7 +303,8 @@ export const translations = {
     },
     magnitude: {
       title: "Not one village. A pattern.",
-      counterSuffix: "cantons have sustained a persistent depopulation process since 1990",
+      counterSuffix:
+        "cantons have sustained a persistent depopulation process since 1990",
       counterValue: 28,
       body: "The analysis of demographic evolution shows that 28 cantons of the country have recorded continuously negative population growth rates since 1990: depopulation is a structural, long-term process in these territories, rather than a temporary demographic fluctuation.",
     },
@@ -299,11 +312,8 @@ export const translations = {
       title: "The living map",
       lead: "Before the names and the figures, the territory.",
       intro:
-        "Twenty-four provinces. Marked: the ten cantons with the steepest decline in the country. Tap a point to see its situation.",
-      loading: "Loading the map…",
-      staticNote:
-        "Animation-free version enabled by your system's reduced-motion preference.",
-      mobileHint: "Drag to rotate the map. Tap a point to open its card.",
+        "Twenty-four provinces. Tap one to see its population dynamics, 1990–2022.",
+      mobileHint: "Tap a province to open its card.",
       legendTitle: "Population dynamics 1990–2022",
       legendDecline: "Sustained decrease",
       legendWeak: "Transition to decrease",
@@ -314,6 +324,7 @@ export const translations = {
         p2: "These results show that population loss does not occur evenly across the national territory: it is concentrated in particular provinces of the Sierra, where dynamics of emigration, demographic ageing and a weakening of natural growth converge.",
       },
       panel: {
+        kicker: "Province",
         rateLabel: "Average annual rate 1990–2022",
         zoneLabel: "Analysis zone",
         population: "Current population",
@@ -322,6 +333,8 @@ export const translations = {
         close: "Close panel",
         visit: "Read the full story",
         inhabitants: "inhabitants",
+        noDeclineNote:
+          "Province with population growth according to the 1990–2022 analysis. It has no declining cantons identified by the study.",
       },
     },
     numbers: {
@@ -392,21 +405,27 @@ export const translations = {
     },
     closing: {
       title: "About NOSTOS",
-      etymology: "Nostos (νόστος): in Greek, the journey home. The root of the word nostalgia.",
+      etymology:
+        "Nostos (νόστος): in Greek, the journey home. The root of the word nostalgia.",
       body: "NOSTOS is an observatory dedicated to producing scientific evidence on rural depopulation and territorial change in Ecuador. This doctoral research, developed in collaboration with agencies of the United Nations system, is its first study. The data comes from official public sources; the stories, from the people who are still there.",
       credits: "Research and writing",
       creditsName: "Alexis Vallejo Mancero",
       institution: "Institution",
       institutionName: "NOSTOS · University / doctoral program (PLACEHOLDER)",
       dataSources: "Data sources",
-      dataSourcesList: "INEC · Population and Housing Censuses · Civil Registry",
+      dataSourcesList:
+        "INEC · Population and Housing Censuses · Civil Registry",
       contact: "Contact",
       contactEmail: "email@example.ec", // PLACEHOLDER
       cta: "Explore the ten cantons",
       rights: "© 2026 NOSTOS. All cited data is in the public domain.",
     },
     numbersFlow: {
-      scrollHint: "Keep scrolling: the data moves with you",
+      hint: "Swipe or use the arrows to move through the data.",
+      prev: "Previous statistic",
+      next: "Next statistic",
+      goTo: "Go to statistic",
+      of: "of",
     },
     cantonal: {
       kicker: "Territorial finding",
@@ -429,24 +448,29 @@ export const translations = {
       evidenceLabel: "Evidence",
       items: [
         {
-          hypothesis: "There is sustained depopulation in territories of Ecuador.",
+          hypothesis:
+            "There is sustained depopulation in territories of Ecuador.",
           verdict: "confirmed",
-          evidence: "28 cantons have recorded continuously negative growth rates since 1990 (INEC, 1990–2022 censuses).",
+          evidence:
+            "28 cantons have recorded continuously negative growth rates since 1990 (INEC, 1990–2022 censuses).",
         },
         {
           hypothesis: "Depopulation is a predominantly rural phenomenon.",
           verdict: "confirmed",
-          evidence: "Central thesis of the study, supported by the observatory's 1990–2022 cantonal analysis.",
+          evidence:
+            "Central thesis of the study, supported by the observatory's 1990–2022 cantonal analysis.",
         },
         {
           hypothesis: "Depopulation is concentrated in the southern highlands.",
           verdict: "partial",
-          evidence: "Cañar and Loja are the only provinces with a net decrease over 1990–2022, but pockets appear outside the southern highlands, such as Jama on the Manabí coast (−0.62% a year).",
+          evidence:
+            "Cañar and Loja are the only provinces with a net decrease over 1990–2022, but pockets appear outside the southern highlands, such as Jama on the Manabí coast (−0.62% a year).",
         },
         {
           hypothesis: "The rest of the Sierra maintains stable growth.",
           verdict: "rejected",
-          evidence: "Chimborazo and Carchi show a progressive slowdown of growth and a transition toward population decline.",
+          evidence:
+            "Chimborazo and Carchi show a progressive slowdown of growth and a transition toward population decline.",
         },
       ],
     },

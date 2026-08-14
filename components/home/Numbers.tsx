@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsapClient";
+import { useState } from "react";
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import {
   Bar,
   BarChart,
@@ -13,24 +13,20 @@ import {
   YAxis,
 } from "recharts";
 import { useLanguage } from "@/lib/LanguageContext";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { cantons, persistentByCategory } from "@/data/cantons";
 import { zones } from "@/data/cantonalStudy";
 
 /**
- * 5. Lo que Dicen los Números — scroll horizontal con GSAP ScrollTrigger.
+ * 5. Lo que Dicen los Números — galería, no scroll horizontal.
  *
- * Desktop: la sección se ancla (pin) y el carril se traslada de izquierda
- * a derecha con scrub. La distancia se calcula desde el ancho REAL del
- * carril (scrollWidth − viewport), así el recorrido siempre muestra
- * todos los paneles completos y termina exactamente al final — sin
- * desfases con el alto de la página (invalidateOnRefresh recalcula al
- * redimensionar).
- *
- * Degradaciones (decisión de diseño):
- * - Mobile/tablet (<1024px): el scroll horizontal secuestrado frustra en
- *   táctil → se apilan los paneles en vertical (layout original).
- * - prefers-reduced-motion: misma pila vertical, sin traslación.
+ * Antes secuestraba el scroll vertical (GSAP ScrollTrigger + pin) para
+ * trasladar un carril horizontal; a pedido del cliente, ahora es una
+ * galería normal: una estadística a la vez, con flechas debajo, puntos
+ * de posición y swipe/drag (framer-motion) para pasar de una a otra.
+ * Mismo componente para cualquier tamaño de pantalla — ya no necesita
+ * distinguir mobile/desktop ni prefers-reduced-motion "a mano": framer
+ * ya respeta la preferencia del sistema vía el MotionConfig global
+ * (app/providers.tsx).
  */
 
 const MOSS = "#7A8B5C";
@@ -58,10 +54,11 @@ function ChartBlock({
   children: React.ReactNode;
 }) {
   return (
-    <figure className="w-full max-w-2xl rounded-sm border border-hairline bg-paper p-6 sm:p-8 lg:w-[62vw] lg:max-w-[960px]">
-      <h3 className="font-sans text-sm font-medium text-ink lg:text-base">{title}</h3>
-      {/* En el carril (lg+) el gráfico crece a media pantalla de alto. */}
-      <div className="mt-6 h-64 w-full lg:h-[46vh] lg:min-h-[340px]">{children}</div>
+    <figure className="w-full max-w-2xl rounded-sm border border-hairline bg-paper p-6 sm:p-8">
+      <h3 className="font-sans text-sm font-medium text-ink lg:text-base">
+        {title}
+      </h3>
+      <div className="mt-6 h-64 w-full sm:h-80 lg:h-[420px]">{children}</div>
       <figcaption className="mt-4 font-sans text-xs text-ink-soft">
         {caption}
       </figcaption>
@@ -115,18 +112,44 @@ function useChartPanels() {
       caption={t.numbers.chart1Caption}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={topTen} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke={HAIRLINE} strokeDasharray="2 4" vertical={false} />
-          <XAxis dataKey="name" tick={{ ...axisStyle, fontSize: 10 }} stroke={HAIRLINE}
-            tickLine={false} interval={0} angle={-30} textAnchor="end" height={58} />
-          <YAxis tick={axisStyle} stroke={HAIRLINE} tickLine={false} width={44} />
-          <Tooltip contentStyle={tooltipStyle}
+        <BarChart
+          data={topTen}
+          margin={{ top: 8, right: 16, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid
+            stroke={HAIRLINE}
+            strokeDasharray="2 4"
+            vertical={false}
+          />
+          <XAxis
+            dataKey="name"
+            tick={{ ...axisStyle, fontSize: 10 }}
+            stroke={HAIRLINE}
+            tickLine={false}
+            interval={0}
+            angle={-30}
+            textAnchor="end"
+            height={58}
+          />
+          <YAxis
+            tick={axisStyle}
+            stroke={HAIRLINE}
+            tickLine={false}
+            width={44}
+          />
+          <Tooltip
+            contentStyle={tooltipStyle}
             formatter={(value) => [`${value}%`, t.numbers.rateAxis]}
             labelFormatter={(label, payload) =>
-              `${label} · ${payload?.[0]?.payload?.province ?? ""}`} />
+              `${label} · ${payload?.[0]?.payload?.province ?? ""}`
+            }
+          />
           <Bar dataKey="rate" radius={[0, 0, 2, 2]}>
             {topTen.map((entry) => (
-              <Cell key={entry.name} fill={entry.rate <= -1 ? MOSS_DARK : MOSS} />
+              <Cell
+                key={entry.name}
+                fill={entry.rate <= -1 ? MOSS_DARK : MOSS}
+              />
             ))}
           </Bar>
         </BarChart>
@@ -139,15 +162,36 @@ function useChartPanels() {
       caption={t.numbers.chart2Caption}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={categories} layout="vertical"
-          margin={{ top: 8, right: 24, left: 8, bottom: 0 }}>
-          <CartesianGrid stroke={HAIRLINE} strokeDasharray="2 4" horizontal={false} />
-          <XAxis type="number" tick={axisStyle} stroke={HAIRLINE} tickLine={false}
-            allowDecimals={false} domain={[0, 20]} />
-          <YAxis type="category" dataKey="name" tick={axisStyle} stroke={HAIRLINE}
-            tickLine={false} width={90} />
-          <Tooltip contentStyle={tooltipStyle}
-            formatter={(value) => [value, t.numbers.cantonsAxis]} />
+        <BarChart
+          data={categories}
+          layout="vertical"
+          margin={{ top: 8, right: 24, left: 8, bottom: 0 }}
+        >
+          <CartesianGrid
+            stroke={HAIRLINE}
+            strokeDasharray="2 4"
+            horizontal={false}
+          />
+          <XAxis
+            type="number"
+            tick={axisStyle}
+            stroke={HAIRLINE}
+            tickLine={false}
+            allowDecimals={false}
+            domain={[0, 20]}
+          />
+          <YAxis
+            type="category"
+            dataKey="name"
+            tick={axisStyle}
+            stroke={HAIRLINE}
+            tickLine={false}
+            width={90}
+          />
+          <Tooltip
+            contentStyle={tooltipStyle}
+            formatter={(value) => [value, t.numbers.cantonsAxis]}
+          />
           <Bar dataKey="n" radius={[0, 2, 2, 0]} barSize={26}>
             {categories.map((entry) => (
               <Cell
@@ -172,16 +216,41 @@ function useChartPanels() {
       caption={t.numbers.chart3Caption}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={zoneAverages} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke={HAIRLINE} strokeDasharray="2 4" vertical={false} />
-          <XAxis dataKey="name" tick={{ ...axisStyle, fontSize: 10 }} stroke={HAIRLINE}
-            tickLine={false} interval={0} angle={-16} textAnchor="end" height={58} />
-          <YAxis tick={axisStyle} stroke={HAIRLINE} tickLine={false} width={44} />
-          <Tooltip contentStyle={tooltipStyle}
-            formatter={(value) => [`${value}%`, t.numbers.rateAxis]} />
+        <BarChart
+          data={zoneAverages}
+          margin={{ top: 8, right: 16, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid
+            stroke={HAIRLINE}
+            strokeDasharray="2 4"
+            vertical={false}
+          />
+          <XAxis
+            dataKey="name"
+            tick={{ ...axisStyle, fontSize: 10 }}
+            stroke={HAIRLINE}
+            tickLine={false}
+            interval={0}
+            angle={-16}
+            textAnchor="end"
+            height={58}
+          />
+          <YAxis
+            tick={axisStyle}
+            stroke={HAIRLINE}
+            tickLine={false}
+            width={44}
+          />
+          <Tooltip
+            contentStyle={tooltipStyle}
+            formatter={(value) => [`${value}%`, t.numbers.rateAxis]}
+          />
           <Bar dataKey="avg" radius={[0, 0, 2, 2]}>
             {zoneAverages.map((entry) => (
-              <Cell key={entry.name} fill={entry.avg <= -0.8 ? MOSS_DARK : MOSS} />
+              <Cell
+                key={entry.name}
+                fill={entry.avg <= -0.8 ? MOSS_DARK : MOSS}
+              />
             ))}
           </Bar>
         </BarChart>
@@ -193,7 +262,7 @@ function useChartPanels() {
 function IntroPanel() {
   const { t } = useLanguage();
   return (
-    <div className="max-w-xl text-center lg:text-left">
+    <div className="max-w-xl text-center">
       <h2 className="font-serif text-3xl font-light text-ink sm:text-4xl">
         {t.numbers.title}
       </h2>
@@ -204,103 +273,123 @@ function IntroPanel() {
   );
 }
 
+/** Flecha de navegación (izquierda/derecha), mismo trazo minimal que el
+ *  botón de cierre de los paneles (ParishPanel/ProvincePanel). */
+function ArrowButton({
+  direction,
+  onClick,
+  label,
+}: {
+  direction: "prev" | "next";
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-hairline text-ink-soft transition-colors duration-200 hover:border-moss-dark hover:text-moss-dark"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path
+          d={direction === "prev" ? "M10 2L4 8l6 6" : "M6 2l6 6-6 6"}
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
+  );
+}
+
+const SWIPE_THRESHOLD = 60;
+
 export function Numbers() {
   const { t } = useLanguage();
-  const reducedMotion = usePrefersReducedMotion();
   const panels = useChartPanels();
+  const total = panels.length;
 
-  // El carril horizontal solo en pantallas anchas.
-  const [horizontal, setHorizontal] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1024px)");
-    const update = () => setHorizontal(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 = avanza, -1 = retrocede
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
+  const goTo = (next: number) => {
+    setDirection(next > index ? 1 : -1);
+    setIndex((next + total) % total);
+  };
+  const prev = () => goTo(index - 1);
+  const next = () => goTo(index + 1);
 
-  // ── Coreografía GSAP: pin de la sección + traslación del carril ─────
-  useEffect(() => {
-    if (!horizontal || reducedMotion) return;
-    const section = sectionRef.current;
-    const track = trackRef.current;
-    if (!section || !track) return;
+  const onDragEnd = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => {
+    if (info.offset.x < -SWIPE_THRESHOLD) next();
+    else if (info.offset.x > SWIPE_THRESHOLD) prev();
+  };
 
-    const ctx = gsap.context(() => {
-      // Distancia real a recorrer: lo que el carril excede del viewport.
-      const distance = () => track.scrollWidth - window.innerWidth;
-
-      gsap.to(track, {
-        x: () => -distance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${distance()}`, // 1px de scroll = 1px de carril
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressRef.current) {
-              gsap.set(progressRef.current, { scaleX: self.progress });
-            }
-          },
-        },
-      });
-    }, section);
-
-    // Recalcular anclas cuando el resto de la página termina de montar.
-    ScrollTrigger.refresh();
-    return () => ctx.revert();
-  }, [horizontal, reducedMotion]);
-
-  // ── Fallback vertical (mobile / reduced motion) ─────────────────────
-  if (!horizontal || reducedMotion) {
-    return (
-      <section className="bg-paper-alt px-6 py-24 sm:py-32">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-10">
-          <IntroPanel />
-          {panels}
-        </div>
-      </section>
-    );
-  }
-
-  // ── Carril horizontal (desktop, GSAP) ───────────────────────────────
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden bg-paper-alt"
-    >
-      {/* Paneles ajustados a su contenido y con separación contenida:
-          los gráficos dominan el viewport en lugar de flotar pequeños. */}
-      <div
-        ref={trackRef}
-        className="flex h-screen w-max items-center gap-20 px-[8vw] will-change-transform"
-      >
-        <div className="w-[38vw] max-w-xl shrink-0">
-          <IntroPanel />
-        </div>
-        {panels.map((panel, i) => (
-          <div key={i} className="shrink-0">
-            {panel}
-          </div>
-        ))}
-      </div>
+    <section className="bg-paper-alt px-6 py-24 sm:py-32">
+      <div className="mx-auto flex max-w-4xl flex-col items-center gap-10">
+        <IntroPanel />
 
-      {/* Pista de lectura + progreso del recorrido. */}
-      <div className="pointer-events-none absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3">
-        <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-ink-soft">
-          {t.numbersFlow.scrollHint}
-        </span>
-        <div className="h-px w-40 bg-hairline">
-          <div ref={progressRef} className="h-px origin-left scale-x-0 bg-moss" />
+        {/* ── Galería ──────────────────────────────────────────────── */}
+        <div className="relative w-full overflow-hidden">
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <motion.div
+              key={index}
+              custom={direction}
+              initial={{ x: direction >= 0 ? 48 : -48, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: direction >= 0 ? -48 : 48, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.15}
+              onDragEnd={onDragEnd}
+              className="flex cursor-grab justify-center active:cursor-grabbing"
+            >
+              {panels[index]}
+            </motion.div>
+          </AnimatePresence>
         </div>
+
+        {/* ── Controles: flechas + puntos ─────────────────────────────── */}
+        <div className="flex items-center gap-6">
+          <ArrowButton
+            direction="prev"
+            onClick={prev}
+            label={t.numbersFlow.prev}
+          />
+
+          <div className="flex items-center gap-2">
+            {panels.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => goTo(i)}
+                aria-label={`${t.numbersFlow.goTo} ${i + 1}`}
+                aria-current={i === index}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === index
+                    ? "w-6 bg-moss-dark"
+                    : "w-1.5 bg-hairline hover:bg-moss/60"
+                }`}
+              />
+            ))}
+          </div>
+
+          <ArrowButton
+            direction="next"
+            onClick={next}
+            label={t.numbersFlow.next}
+          />
+        </div>
+
+        <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">
+          {index + 1} {t.numbersFlow.of} {total} · {t.numbersFlow.hint}
+        </p>
       </div>
     </section>
   );

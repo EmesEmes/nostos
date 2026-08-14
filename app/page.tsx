@@ -5,7 +5,7 @@ import { TheProblem } from "@/components/home/TheProblem";
 import { Statement } from "@/components/home/Statement";
 import { Magnitude } from "@/components/home/Magnitude";
 import { Numbers } from "@/components/home/Numbers";
-import { CantonalStudy } from "@/components/home/CantonalStudy";
+// import { CantonalStudy } from "@/components/home/CantonalStudy";
 import { Findings } from "@/components/home/Findings";
 import { CaseStudy } from "@/components/home/CaseStudy";
 import { CantonsGrid } from "@/components/home/CantonsGrid";
@@ -41,7 +41,7 @@ export default function HomePage() {
       <Statement />
       <Magnitude />
       <Numbers />
-      <CantonalStudy />
+      {/*<CantonalStudy /> */}
       <Findings />
       <CaseStudy />
       <CantonsGrid />

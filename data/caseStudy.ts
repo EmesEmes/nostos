@@ -8,6 +8,10 @@ export const caseStudy = {
   slug: "chavezpamba",
   name: "Chavezpamba",
   province: "Pichincha",
+  // Enlaza con el id de provinceShapes.ts (data/provinceDynamics.ts usa
+  // el mismo id) — así el panel de provincia sabe cuándo mostrar esta
+  // ficha aunque la provincia no tenga cantones en decrecimiento.
+  provinceId: "pichincha",
   // PLACEHOLDER: cifras de ejemplo (censo de referencia ≈ 730 hab.)
   populationNow: 730,
   population2050: 340,

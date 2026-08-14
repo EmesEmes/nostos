@@ -1,106 +1,31 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useLanguage } from "@/lib/LanguageContext";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
-import { cantons, type Canton } from "@/data/cantons";
 import { dynamicColors } from "@/data/provinceDynamics";
-import { ParishPanel } from "./ParishPanel";
+import type { ProvinceShape } from "@/data/provinceShapes";
+import { ProvinceMap2D } from "./ProvinceMap2D";
+import { ProvincePanel } from "./ProvincePanel";
 
 /**
- * 4. El Mapa Vivo — pieza central interactiva.
+ * 3. El Mapa Vivo — pieza central interactiva.
  *
- * Rendimiento / lazy load:
- * - El canvas de three.js se importa con next/dynamic (ssr: false), de modo
- *   que su bundle NO forma parte del JS inicial de la página.
- * - Además, el componente ni siquiera se monta hasta que la sección se
- *   acerca al viewport (IntersectionObserver con rootMargin de 600px),
- *   así el resto del home carga y se puede leer sin esperar al mapa.
+ * Versión 2D (reemplaza la anterior versión 3D en three.js): un único
+ * SVG con las 24 provincias siempre visibles por completo, coloreadas
+ * según su dinámica poblacional real (data/provinceDynamics.ts). Cada
+ * provincia es clickeable/accesible por teclado y abre su ficha en
+ * ProvincePanel.tsx — mismo mecanismo de panel lateral que antes, ahora
+ * a nivel de provincia en vez de cantón.
  *
- * Disparo de la animación:
- * - Un segundo observer (umbral 25%, sin margen) marca `triggered` cuando
- *   la sección entra de verdad en pantalla: la caída de provincias ocurre
- *   al llegar, no on-load.
- *
- * Movimiento reducido:
- * - Con prefers-reduced-motion el mapa se renderiza ya ensamblado
- *   (sin caída) y los marcadores no rebotan; la interacción se mantiene.
+ * Al ser SVG (liviano) no necesita el lazy-load ni los observers de
+ * montaje que sí justificaba el bundle de three.js.
  */
-const MapCanvas = dynamic(() => import("./MapCanvas"), {
-  ssr: false,
-  loading: () => <MapLoading />,
-});
-
-function MapLoading() {
-  return (
-    <div
-      className="flex h-full w-full items-center justify-center"
-      role="status"
-    >
-      <MapLoadingLabel />
-    </div>
-  );
-}
-
-function MapLoadingLabel() {
-  const { t } = useLanguage();
-  return (
-    <span className="font-sans text-sm text-ink-soft">{t.map.loading}</span>
-  );
-}
-
 export function MapSection() {
   const { t, lang } = useLanguage();
-  const reducedMotion = usePrefersReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const [shouldMount, setShouldMount] = useState(false); // lazy mount
-  const [triggered, setTriggered] = useState(false); // dispara la caída
-  const [selected, setSelected] = useState<Canton | null>(null);
-  const [isTouch, setIsTouch] = useState(false);
-
-  // Detecta dispositivos táctiles para mostrar la pista de interacción móvil.
-  useEffect(() => {
-    setIsTouch(window.matchMedia("(pointer: coarse)").matches);
-  }, []);
-
-  // Observer 1: montar el canvas cuando la sección esté cerca (pre-carga).
-  useEffect(() => {
-    const node = sectionRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldMount(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "600px 0px" },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  // Observer 2: disparar la caída cuando la sección sea visible de verdad.
-  useEffect(() => {
-    const node = sectionRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTriggered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.25 },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
+  const [selected, setSelected] = useState<ProvinceShape | null>(null);
 
   return (
-    <section ref={sectionRef} className="px-0 py-24 sm:py-32">
+    <section className="px-0 py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-6 text-center">
         <p className="mb-3 font-serif text-lg font-light italic text-ink-soft">
           {t.map.lead}
@@ -111,30 +36,21 @@ export function MapSection() {
         <p className="mt-4 font-sans text-base leading-relaxed text-ink-soft">
           {t.map.intro}
         </p>
-        {reducedMotion && (
-          <p className="mt-2 font-sans text-xs text-ink-soft">
-            {t.map.staticNote}
-          </p>
-        )}
       </div>
 
-      {/* Contenedor del canvas. Altura fija en vh para que el mapa tenga
-          presencia sin robar toda la pantalla en mobile. */}
-      <div className="relative mx-auto mt-10 h-[70vh] min-h-[420px] w-full max-w-6xl sm:h-[75vh]">
-        {shouldMount ? (
-          <MapCanvas
-            triggered={triggered || reducedMotion}
-            reducedMotion={reducedMotion}
-            parishes={cantons}
-            selectedSlug={selected?.slug ?? null}
-            onSelectParish={setSelected}
+      {/* Contenedor del mapa: ancho máximo + relación de aspecto real del
+          espacio de coordenadas (MAP_WIDTH × MAP_HEIGHT), así el SVG nunca
+          se recorta ni deja aire de sobra. */}
+      <div className="relative mx-auto mt-10 w-full max-w-4xl px-6">
+        <div className="aspect-[10/5.891] w-full">
+          <ProvinceMap2D
+            selectedId={selected?.id ?? null}
+            onSelect={setSelected}
           />
-        ) : (
-          <MapLoading />
-        )}
+        </div>
 
         {/* Leyenda del coropleto (dinámica poblacional). */}
-        <div className="pointer-events-none absolute inset-x-4 bottom-2 rounded-sm border border-hairline bg-paper/90 px-3 py-2 backdrop-blur-sm sm:inset-x-auto sm:bottom-auto sm:left-6 sm:top-2 sm:px-4 sm:py-3">
+        <div className="pointer-events-none absolute inset-x-4 bottom-4 rounded-sm border border-hairline bg-paper/90 px-3 py-2 backdrop-blur-sm sm:inset-x-auto sm:bottom-auto sm:left-10 sm:top-4 sm:px-4 sm:py-3">
           <p className="font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-ink">
             {t.map.legendTitle}
           </p>
@@ -160,12 +76,11 @@ export function MapSection() {
           </ul>
         </div>
 
-        {/* Pista de interacción para pantallas táctiles. */}
-        {isTouch && (
-          <p className="pointer-events-none absolute -bottom-6 left-1/2 w-full max-w-xs -translate-x-1/2 text-center font-sans text-[11px] text-ink-soft">
-            {t.map.mobileHint}
-          </p>
-        )}
+        {/* Pista de interacción: ya no depende de detectar touch, porque
+            no hay gesto de arrastre que distinguir del tap/click. */}
+        <p className="pointer-events-none mt-4 text-center font-sans text-[11px] text-ink-soft">
+          {t.map.mobileHint}
+        </p>
       </div>
 
       {/* Lectura provincial (texto del cliente): el hallazgo que la
@@ -182,9 +97,9 @@ export function MapSection() {
         </p>
       </div>
 
-      {/* Panel lateral con la ficha de la parroquia seleccionada. */}
-      <ParishPanel
-        canton={selected}
+      {/* Panel lateral con la ficha de la provincia seleccionada. */}
+      <ProvincePanel
+        province={selected}
         lang={lang}
         onClose={() => setSelected(null)}
       />
