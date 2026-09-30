@@ -2,19 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { BackButton } from "@/components/BackButton";
 import { useLanguage } from "@/lib/LanguageContext";
 import { cantons } from "@/data/cantons";
 import { zones } from "@/data/cantonalStudy";
 
-/**
- * Vista de la página de un cantón. Todo lo mostrado proviene del
- * análisis real 1990–2022 (data/cantons.ts + data/cantonalStudy.ts):
- * tasa anual, zona, narrativa de la zona y cantones vecinos. Las
- * historias/fotos/podcast se anuncian honestamente como pendientes del
- * trabajo de campo (sin placeholders inventados).
- */
 export function CantonProfile({ slug }: { slug: string }) {
   const { t, lang } = useLanguage();
   const canton = cantons.find((c) => c.slug === slug)!;
@@ -26,10 +17,6 @@ export function CantonProfile({ slug }: { slug: string }) {
 
   return (
     <main>
-      <BackButton />
-      <LanguageSwitcher />
-
-      {/* ── Apertura: el dato manda ────────────────────────────────────── */}
       <header className="px-6 pb-14 pt-28 text-center sm:pt-36">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -55,7 +42,6 @@ export function CantonProfile({ slug }: { slug: string }) {
         </motion.div>
       </header>
 
-      {/* ── Su zona en el análisis (narrativa real del scrollytelling) ─── */}
       <section className="border-t border-hairline bg-paper-alt px-6 py-16">
         <div className="mx-auto max-w-lectura">
           <p className="font-sans text-xs uppercase tracking-[0.25em] text-moss">
@@ -70,7 +56,6 @@ export function CantonProfile({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* ── Cantones de la misma zona ──────────────────────────────────── */}
       {neighbors.length > 0 && (
         <section className="px-6 py-16">
           <div className="mx-auto max-w-lectura">
@@ -122,7 +107,6 @@ export function CantonProfile({ slug }: { slug: string }) {
         </section>
       )}
 
-      {/* ── Trabajo de campo: pendiente, dicho con honestidad ──────────── */}
       <section className="border-t border-hairline bg-paper-alt px-6 py-14">
         <div className="mx-auto max-w-lectura text-center">
           <p className="font-sans text-xs uppercase tracking-[0.25em] text-moss">

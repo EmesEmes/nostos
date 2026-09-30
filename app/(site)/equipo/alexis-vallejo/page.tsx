@@ -2,28 +2,17 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/lib/LanguageContext";
 import { team } from "@/data/team";
 
-/**
- * Perfil de Alexis Vallejo Mancero (fundador de NOSTOS).
- * Lee de data/team.ts — al migrar los perfiles a Supabase, esta página
- * pasa a app/equipo/[slug]/page.tsx leyendo de la tabla `team_members`.
- */
 export default function AlexisVallejoPage() {
   const { lang } = useLanguage();
   const member = team.find((m) => m.slug === "alexis-vallejo")!;
 
   return (
     <main>
-      <LanguageSwitcher />
-
-      {/* ── Apertura ──────────────────────────────────────────────────── */}
       <header className="px-6 pb-16 pt-28 sm:pt-36">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-          {/* ⚠️ RETRATO PLACEHOLDER: definir `portrait` en data/team.ts
-              (Supabase Storage) y sustituir por <Image>. */}
           {member.portrait ? (
             <img
               src={member.portrait}
@@ -52,7 +41,6 @@ export default function AlexisVallejoPage() {
         </div>
       </header>
 
-      {/* ── Bio ───────────────────────────────────────────────────────── */}
       <section className="border-t border-hairline px-6 py-16">
         <div className="mx-auto max-w-lectura space-y-7">
           {member.bio.map((paragraph, index) => (
@@ -64,8 +52,7 @@ export default function AlexisVallejoPage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className={
                 index === 0
-                  ? // El primer párrafo, como entrada en serif.
-                    "font-serif text-xl font-light leading-relaxed text-ink"
+                  ? "font-serif text-xl font-light leading-relaxed text-ink"
                   : "font-sans text-base leading-relaxed text-ink"
               }
             >
@@ -75,7 +62,6 @@ export default function AlexisVallejoPage() {
         </div>
       </section>
 
-      {/* ── Invitación a colaborar (cierra el circuito con Participa) ─── */}
       <section className="bg-paper-alt px-6 py-16 text-center">
         <Link
           href="/#participa"

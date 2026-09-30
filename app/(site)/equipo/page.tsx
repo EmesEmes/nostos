@@ -1,20 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/lib/LanguageContext";
 import { team } from "@/data/team";
 
-/**
- * Índice del equipo de NOSTOS. Hoy un solo perfil; al crecer el
- * observatorio (o al migrar a Supabase), la lista se alimenta sola.
- */
 export default function TeamIndexPage() {
   const { lang } = useLanguage();
 
   return (
     <main>
-      <LanguageSwitcher />
       <section className="px-6 pb-24 pt-28 sm:pt-36">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-center font-serif text-4xl font-light text-ink">

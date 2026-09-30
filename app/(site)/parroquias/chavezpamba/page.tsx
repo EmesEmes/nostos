@@ -2,24 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { BackButton } from "@/components/BackButton";
 import { useLanguage } from "@/lib/LanguageContext";
 import { caseStudy } from "@/data/caseStudy";
 
-/**
- * Página individual de Chavezpamba (estudio de caso / pilotaje).
- *
- * Es el MOLDE para las 10 páginas de parroquias futuras: cuando la muestra
- * se confirme, generalizar a app/parroquias/[slug]/page.tsx leyendo de
- * data/parishes.ts (o de una tabla `parishes` en Supabase).
- *
- * ⚠️ PLACEHOLDERS pendientes (ver data/caseStudy.ts):
- * - Cifras y párrafos narrativos definitivos del pilotaje.
- * - Galería: sustituir los bloques por <Image> con fotos reales
- *   (Supabase Storage → URLs públicas).
- * - Podcast: definir `podcastUrl` (archivo en Supabase Storage o embed).
- */
 export default function ChavezpambaPage() {
   const { t, lang } = useLanguage();
   const numberFormat = new Intl.NumberFormat("es-EC");
@@ -38,12 +23,7 @@ export default function ChavezpambaPage() {
 
   return (
     <main>
-      <BackButton />
-      <LanguageSwitcher />
-
-      {/* ── Apertura ──────────────────────────────────────────────────── */}
       <header className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-6 text-center">
-        {/* ⚠️ FOTO PLACEHOLDER de cabecera (misma pauta que el hero del home). */}
         <img
           src="/hero-bg.svg"
           alt=""
@@ -76,7 +56,6 @@ export default function ChavezpambaPage() {
         </motion.div>
       </header>
 
-      {/* ── Datos clave ───────────────────────────────────────────────── */}
       <section className="border-y border-hairline bg-paper-alt px-6 py-14">
         <dl className="mx-auto grid max-w-3xl grid-cols-1 gap-8 text-center sm:grid-cols-3">
           {stats.map((stat) => (
@@ -92,7 +71,6 @@ export default function ChavezpambaPage() {
         </dl>
       </section>
 
-      {/* ── Narrativa del pilotaje ────────────────────────────────────── */}
       <section className="px-6 py-20">
         <div className="mx-auto max-w-lectura space-y-8">
           {caseStudy.body[lang].map((paragraph, index) => (
@@ -110,7 +88,6 @@ export default function ChavezpambaPage() {
         </div>
       </section>
 
-      {/* ── Podcast ───────────────────────────────────────────────────── */}
       <section className="bg-paper-alt px-6 py-16">
         <div className="mx-auto max-w-2xl rounded-sm border border-hairline bg-paper p-8">
           <p className="font-sans text-xs uppercase tracking-[0.2em] text-moss">
@@ -120,14 +97,12 @@ export default function ChavezpambaPage() {
             {caseStudy.podcastTitle[lang]}
           </h2>
           {caseStudy.podcastUrl ? (
-            /* Con URL real: reproductor nativo (o cambiar por embed). */
             <audio
               controls
               src={caseStudy.podcastUrl}
               className="mt-6 w-full"
             />
           ) : (
-            /* ⚠️ PLACEHOLDER: definir podcastUrl en data/caseStudy.ts. */
             <div className="mt-6 flex items-center gap-4 rounded-sm border border-dashed border-hairline px-5 py-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-ink-soft">
                 ▶
@@ -142,11 +117,9 @@ export default function ChavezpambaPage() {
         </div>
       </section>
 
-      {/* ── Galería ───────────────────────────────────────────────────── */}
       <section className="px-6 py-20">
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
           {Array.from({ length: caseStudy.galleryCount }, (_, index) => (
-            /* ⚠️ FOTO PLACEHOLDER: sustituir por <Image> (Supabase Storage). */
             <div
               key={index}
               className="flex aspect-square items-center justify-center rounded-sm border border-dashed border-hairline bg-paper-alt"
@@ -159,7 +132,6 @@ export default function ChavezpambaPage() {
         </div>
       </section>
 
-      {/* ── Volver ────────────────────────────────────────────────────── */}
       <footer className="border-t border-hairline px-6 py-12 text-center">
         <Link
           href="/"

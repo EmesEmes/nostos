@@ -3,19 +3,14 @@
 import { useLanguage } from "@/lib/LanguageContext";
 import type { Lang } from "@/lib/translations";
 
-/**
- * Switcher de idioma ES/EN.
- * Fijo en la esquina superior derecha, visible durante todo el scroll.
- * Discreto a propósito: el home no tiene navegación pesada.
- */
+const options: Lang[] = ["es", "en"];
+
 export function LanguageSwitcher() {
   const { lang, setLang, t } = useLanguage();
 
-  const options: Lang[] = ["es", "en"];
-
   return (
     <div
-      className="fixed right-4 top-4 z-50 flex items-center gap-px overflow-hidden rounded-full border border-hairline bg-paper/90 shadow-sm backdrop-blur-sm sm:right-6 sm:top-6"
+      className="flex items-center gap-px overflow-hidden rounded-full border border-hairline bg-paper"
       role="group"
       aria-label={t.langSwitcher.label}
     >

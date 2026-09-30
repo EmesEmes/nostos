@@ -1,12 +1,3 @@
-/**
- * Diccionario bilingüe de NOSTOS.
- *
- * TODO el texto visible del sitio vive aquí, en español e inglés.
- * ⚠️ PLACEHOLDER: las cifras, nombres de parroquias y proyecciones son
- * datos ficticios pero realistas. Reemplazar con los datos definitivos
- * de la investigación antes de publicar (buscar "PLACEHOLDER" en el repo).
- */
-
 export type Lang = "es" | "en";
 
 export const translations = {
@@ -15,6 +6,16 @@ export const translations = {
       label: "Idioma",
       es: "ES",
       en: "EN",
+    },
+    nav: {
+      label: "Navegación principal",
+      home: "NOSTOS, ir al inicio",
+      research: "Investigaciones",
+    },
+    researchPage: {
+      kicker: "NOSTOS",
+      title: "Investigaciones",
+      soon: "Muy pronto encontrarás aquí los textos de la investigación.",
     },
     hero: {
       // PLACEHOLDER: parroquia y cifras de ejemplo.
@@ -278,6 +279,16 @@ export const translations = {
       label: "Language",
       es: "ES",
       en: "EN",
+    },
+    nav: {
+      label: "Main navigation",
+      home: "NOSTOS, go to home",
+      research: "Research",
+    },
+    researchPage: {
+      kicker: "NOSTOS",
+      title: "Research",
+      soon: "The research texts will be available here very soon.",
     },
     hero: {
       kicker: "Nostos",
