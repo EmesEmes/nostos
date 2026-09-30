@@ -15,7 +15,14 @@ export const translations = {
     researchPage: {
       kicker: "NOSTOS",
       title: "Investigaciones",
-      soon: "Muy pronto encontrarás aquí los textos de la investigación.",
+      intro:
+        "Textos y avances de la investigación sobre la despoblación rural en el Ecuador.",
+      empty: "Todavía no hay investigaciones publicadas.",
+      readMore: "Leer",
+      back: "Investigaciones",
+      by: "Por",
+      aboutAuthor: "Sobre el autor",
+      onlySpanish: "Este texto solo está disponible en español.",
     },
     hero: {
       // PLACEHOLDER: parroquia y cifras de ejemplo.
@@ -288,7 +295,14 @@ export const translations = {
     researchPage: {
       kicker: "NOSTOS",
       title: "Research",
-      soon: "The research texts will be available here very soon.",
+      intro:
+        "Texts and progress from the research on rural depopulation in Ecuador.",
+      empty: "No research has been published yet.",
+      readMore: "Read",
+      back: "Research",
+      by: "By",
+      aboutAuthor: "About the author",
+      onlySpanish: "This text is only available in Spanish.",
     },
     hero: {
       kicker: "Nostos",

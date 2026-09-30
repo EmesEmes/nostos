@@ -29,6 +29,36 @@ export type Database = {
         }
         Relationships: []
       }
+      authors: {
+        Row: {
+          affiliation: string | null
+          bio_en: string | null
+          bio_es: string | null
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          affiliation?: string | null
+          bio_en?: string | null
+          bio_es?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          affiliation?: string | null
+          bio_en?: string | null
+          bio_es?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -58,6 +88,7 @@ export type Database = {
       }
       investigations: {
         Row: {
+          author_id: string | null
           content_en: Json | null
           content_es: Json | null
           cover_path: string | null
@@ -73,6 +104,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          author_id?: string | null
           content_en?: Json | null
           content_es?: Json | null
           cover_path?: string | null
@@ -88,6 +120,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          author_id?: string | null
           content_en?: Json | null
           content_es?: Json | null
           cover_path?: string | null
@@ -102,7 +135,15 @@ export type Database = {
           title_es?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "investigations_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "authors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       newsletter_subscribers: {
         Row: {

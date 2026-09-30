@@ -1,8 +1,9 @@
 import "server-only";
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function getAdmin() {
+export const getAdmin = cache(async () => {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const claims = data?.claims;
@@ -12,7 +13,7 @@ export async function getAdmin() {
   if (!isAdmin) return null;
 
   return { supabase, email: claims.email ?? "" };
-}
+});
 
 export async function requireAdmin() {
   const admin = await getAdmin();
