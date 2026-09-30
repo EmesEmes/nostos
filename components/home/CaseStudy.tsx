@@ -15,8 +15,14 @@ export function CaseStudy() {
   const numberFormat = new Intl.NumberFormat("es-EC");
 
   const stats = [
-    { label: t.map.panel.population, value: numberFormat.format(caseStudy.populationNow) },
-    { label: t.map.panel.projection, value: numberFormat.format(caseStudy.population2050) },
+    {
+      label: t.map.panel.population,
+      value: numberFormat.format(caseStudy.populationNow),
+    },
+    {
+      label: t.map.panel.projection,
+      value: numberFormat.format(caseStudy.population2050),
+    },
     { label: t.map.panel.change, value: `${caseStudy.changePct}%` },
   ];
 
@@ -26,7 +32,7 @@ export function CaseStudy() {
         <p className="text-center font-sans text-xs uppercase tracking-[0.35em] text-moss">
           {t.caseStudy.kicker}
         </p>
-        <p className="mx-auto mt-4 max-w-prose text-center font-sans text-base leading-relaxed text-ink-soft">
+        <p className="mx-auto mt-4 max-w-lectura text-center font-sans text-base leading-relaxed text-ink-soft">
           {t.caseStudy.intro}
         </p>
 

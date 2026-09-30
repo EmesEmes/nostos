@@ -5,18 +5,9 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import { translations, type Lang } from "./translations";
-
-/**
- * Sistema de traducción deliberadamente simple (sin librería de i18n):
- * un diccionario tipado en lib/translations.ts y un contexto que expone
- * el idioma actual, un setter y el objeto de textos ya resuelto.
- *
- * La preferencia se persiste en localStorage y se refleja en el atributo
- * lang del <html> (importante para lectores de pantalla).
- */
 
 type LanguageContextValue = {
   lang: Lang;
@@ -27,27 +18,45 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 const STORAGE_KEY = "nostos-lang";
+const DEFAULT_LANG: Lang = "es";
+
+const listeners = new Set<() => void>();
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === STORAGE_KEY) onChange();
+  };
+  window.addEventListener("storage", onStorage);
+  return () => {
+    listeners.delete(onChange);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+function getSnapshot(): Lang {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "es" || stored === "en" ? stored : DEFAULT_LANG;
+  } catch {
+    return DEFAULT_LANG;
+  }
+}
+
+const getServerSnapshot = (): Lang => DEFAULT_LANG;
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  // "es" es el idioma por defecto del proyecto.
-  const [lang, setLangState] = useState<Lang>("es");
+  const lang = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  // Recupera la preferencia guardada (solo en cliente, tras hidratar).
-  useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "es" || stored === "en") {
-      setLangState(stored);
-    }
-  }, []);
-
-  // Mantiene <html lang="..."> sincronizado con el idioma activo.
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
 
   const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    window.localStorage.setItem(STORAGE_KEY, next);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, next);
+    } catch {}
+    listeners.forEach((listener) => listener());
   }, []);
 
   return (

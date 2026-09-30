@@ -12,25 +12,6 @@ import { CantonsGrid } from "@/components/home/CantonsGrid";
 import { Closing } from "@/components/home/Closing";
 import { Participate } from "@/components/home/Participate";
 
-/**
- * Home de NOSTOS — orden actualizado a pedido del cliente:
- *  1. Hero (con imagen de fondo)
- *  2. El Problema (de vuelta tras el hero, a pedido del cliente)
- *  3. El Mapa Vivo
- *  3b. Tesis central ("fenómeno predominantemente rural")
- *  4. La Magnitud
- *  5. Lo que Dicen los Números (scroll horizontal en desktop)
- *  6. Hallazgo territorial (estudio cantonal, scrollytelling)
- *  7. Principales hallazgos (hipótesis → veredicto)
- *  8. Estudio de Caso: Chavezpamba (pilotaje)
- *  9. Los diez cantones con mayor decrecimiento (datos reales)
- * 10. Sobre la investigación
- * 11. Participa (contacto + boletín + visitas)
- *
- * Nota: la sección de Metodología fue retirada del home a pedido del
- * cliente; el componente se conserva sin usar en components/home/ por si
- * se reubica (p. ej. como página propia enlazada desde el cierre).
- */
 export default function HomePage() {
   return (
     <main>

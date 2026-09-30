@@ -15,12 +15,15 @@ export function CantonsGrid() {
     `${rate.toFixed(2).replace(".", lang === "es" ? "," : ".")}%`;
 
   return (
-    <section id="cantones" className="border-t border-hairline bg-paper-alt px-6 py-24 sm:py-28">
+    <section
+      id="cantones"
+      className="border-t border-hairline bg-paper-alt px-6 py-24 sm:py-28"
+    >
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center font-serif text-3xl font-light text-ink sm:text-4xl">
           {t.cantonsGrid.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-prose text-center font-sans text-base leading-relaxed text-ink-soft">
+        <p className="mx-auto mt-4 max-w-lectura text-center font-sans text-base leading-relaxed text-ink-soft">
           {t.cantonsGrid.intro}
         </p>
 
@@ -31,7 +34,11 @@ export function CantonsGrid() {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "0px 0px -8% 0px" }}
-              transition={{ duration: 0.5, delay: (index % 5) * 0.06, ease: "easeOut" }}
+              transition={{
+                duration: 0.5,
+                delay: (index % 5) * 0.06,
+                ease: "easeOut",
+              }}
             >
               <Link
                 href={`/cantones/${canton.slug}`}

@@ -85,7 +85,7 @@ export function MapSection() {
 
       {/* Lectura provincial (texto del cliente): el hallazgo que la
           leyenda del coropleto resume. */}
-      <div className="mx-auto mt-16 max-w-prose px-6">
+      <div className="mx-auto mt-16 max-w-lectura px-6">
         <h3 className="font-serif text-2xl font-light leading-snug text-ink">
           {t.map.provincial.title}
         </h3>
