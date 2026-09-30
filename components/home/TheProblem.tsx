@@ -43,7 +43,7 @@ export function TheProblem() {
 
   return (
     <section className="px-6 py-28 sm:py-40">
-      <div className="mx-auto max-w-prose">
+      <div className="mx-auto max-w-lectura">
         {t.problem.lines.map((line, index) => (
           <motion.p
             key={index}

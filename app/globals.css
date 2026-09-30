@@ -1,27 +1,36 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/*
-  Ecuador Vacío — estilos globales.
-  La paleta vive también como variables CSS para poder usarla
-  fuera de Tailwind (charts, three.js, SVG inline).
-*/
+@theme {
+  --color-paper: #fafaf7;
+  --color-paper-alt: #f0efe8;
+  --color-moss: #7a8b5c;
+  --color-moss-dark: #5c6b45;
+  --color-ink: #2e2c28;
+  --color-ink-soft: #6b6862;
+  --color-hairline: #dedbd1;
+
+  --container-lectura: 42rem;
+}
+
+@theme inline {
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
 :root {
-  --paper: #fafaf7;
-  --paper-alt: #f0efe8;
-  --moss: #7a8b5c;
-  --moss-dark: #5c6b45;
-  --ink: #2e2c28;
-  --ink-soft: #6b6862;
-  --hairline: #dedbd1;
+  --paper: var(--color-paper);
+  --paper-alt: var(--color-paper-alt);
+  --moss: var(--color-moss);
+  --moss-dark: var(--color-moss-dark);
+  --ink: var(--color-ink);
+  --ink-soft: var(--color-ink-soft);
+  --hairline: var(--color-hairline);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Si el sistema pide menos movimiento, el scroll también deja de ser animado. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -35,7 +44,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Foco visible y coherente con la paleta (accesibilidad de teclado). */
 :focus-visible {
   outline: 2px solid var(--moss-dark);
   outline-offset: 3px;
@@ -47,10 +55,6 @@ body {
   color: var(--paper);
 }
 
-/*
-  Indicador de scroll del hero: bounce sutil e infinito (~1.5s por ciclo,
-  amplitud pequeña). Se apaga por completo con prefers-reduced-motion.
-*/
 @keyframes scroll-hint {
   0%,
   100% {

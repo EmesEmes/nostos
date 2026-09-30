@@ -42,7 +42,9 @@ export function CantonProfile({ slug }: { slug: string }) {
           <h1 className="mt-4 font-serif text-5xl font-light text-ink sm:text-6xl">
             {canton.name}
           </h1>
-          <p className="mt-3 font-sans text-sm text-ink-soft">{canton.province}</p>
+          <p className="mt-3 font-sans text-sm text-ink-soft">
+            {canton.province}
+          </p>
 
           <p className="mt-10 font-serif text-7xl font-light tabular-nums text-moss-dark sm:text-8xl">
             {rateFormat(canton.rate)}
@@ -55,7 +57,7 @@ export function CantonProfile({ slug }: { slug: string }) {
 
       {/* ── Su zona en el análisis (narrativa real del scrollytelling) ─── */}
       <section className="border-t border-hairline bg-paper-alt px-6 py-16">
-        <div className="mx-auto max-w-prose">
+        <div className="mx-auto max-w-lectura">
           <p className="font-sans text-xs uppercase tracking-[0.25em] text-moss">
             {t.cantonPage.zoneTitle}
           </p>
@@ -71,7 +73,7 @@ export function CantonProfile({ slug }: { slug: string }) {
       {/* ── Cantones de la misma zona ──────────────────────────────────── */}
       {neighbors.length > 0 && (
         <section className="px-6 py-16">
-          <div className="mx-auto max-w-prose">
+          <div className="mx-auto max-w-lectura">
             <h2 className="font-sans text-xs uppercase tracking-[0.25em] text-ink-soft">
               {t.cantonPage.othersTitle}
             </h2>
@@ -80,11 +82,15 @@ export function CantonProfile({ slug }: { slug: string }) {
                 const linked = cantons.find((c) => c.name === other.name);
                 const row = (
                   <>
-                    <span className="font-sans text-sm text-ink">{other.name}</span>
+                    <span className="font-sans text-sm text-ink">
+                      {other.name}
+                    </span>
                     <span className="flex-1 border-b border-dotted border-hairline" />
                     <span
                       className={`font-serif text-sm tabular-nums ${
-                        other.rate <= -1 ? "font-medium text-moss-dark" : "text-ink"
+                        other.rate <= -1
+                          ? "font-medium text-moss-dark"
+                          : "text-ink"
                       }`}
                     >
                       {rateFormat(other.rate)}
@@ -118,7 +124,7 @@ export function CantonProfile({ slug }: { slug: string }) {
 
       {/* ── Trabajo de campo: pendiente, dicho con honestidad ──────────── */}
       <section className="border-t border-hairline bg-paper-alt px-6 py-14">
-        <div className="mx-auto max-w-prose text-center">
+        <div className="mx-auto max-w-lectura text-center">
           <p className="font-sans text-xs uppercase tracking-[0.25em] text-moss">
             {t.cantonPage.fieldworkTitle}
           </p>

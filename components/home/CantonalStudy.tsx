@@ -97,9 +97,7 @@ export function CantonalStudy() {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          const index = stepRefs.current.indexOf(
-            entry.target as HTMLElement,
-          );
+          const index = stepRefs.current.indexOf(entry.target as HTMLElement);
           if (index !== -1) setActive(index);
         }
       },
@@ -140,7 +138,7 @@ export function CantonalStudy() {
         <h2 className="mt-3 text-center font-serif text-3xl font-light text-ink sm:text-4xl">
           {t.cantonal.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-prose text-center font-sans text-base leading-relaxed text-ink-soft">
+        <p className="mx-auto mt-4 max-w-lectura text-center font-sans text-base leading-relaxed text-ink-soft">
           {t.cantonal.intro}
         </p>
 
@@ -161,7 +159,13 @@ export function CantonalStudy() {
                     <path
                       key={`${shape.id}-${i}`}
                       d={toPath(ring)}
-                      fill={highlighted ? "#7A8B5C" : overview ? "#EBEDE4" : "#F0EFE8"}
+                      fill={
+                        highlighted
+                          ? "#7A8B5C"
+                          : overview
+                            ? "#EBEDE4"
+                            : "#F0EFE8"
+                      }
                       stroke="#5C6B45"
                       strokeWidth={0.014}
                       strokeLinejoin="round"

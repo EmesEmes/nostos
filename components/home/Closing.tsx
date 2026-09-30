@@ -26,10 +26,10 @@ export function Closing() {
             {t.closing.title}
           </h2>
           {/* Etimología del nombre: el sitio entero habla de volver a casa. */}
-          <p className="mx-auto mt-4 max-w-prose font-serif text-base font-light italic text-ink-soft">
+          <p className="mx-auto mt-4 max-w-lectura font-serif text-base font-light italic text-ink-soft">
             {t.closing.etymology}
           </p>
-          <p className="mx-auto mt-6 max-w-prose font-sans text-base leading-relaxed text-ink-soft">
+          <p className="mx-auto mt-6 max-w-lectura font-sans text-base leading-relaxed text-ink-soft">
             {t.closing.body}
           </p>
 
@@ -86,7 +86,6 @@ export function Closing() {
             </dd>
           </div>
         </dl>
-
       </div>
     </section>
   );

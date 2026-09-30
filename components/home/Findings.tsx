@@ -33,7 +33,7 @@ export function Findings() {
         <h2 className="font-serif text-3xl font-light text-ink sm:text-4xl">
           {t.findings.title}
         </h2>
-        <p className="mt-4 max-w-prose font-sans text-base leading-relaxed text-ink-soft">
+        <p className="mt-4 max-w-lectura font-sans text-base leading-relaxed text-ink-soft">
           {t.findings.intro}
         </p>
 
@@ -46,7 +46,11 @@ export function Findings() {
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-                transition={{ duration: 0.6, delay: (index % 2) * 0.12, ease: "easeOut" }}
+                transition={{
+                  duration: 0.6,
+                  delay: (index % 2) * 0.12,
+                  ease: "easeOut",
+                }}
                 className="flex flex-col rounded-sm border border-hairline bg-paper p-7"
               >
                 {/* La hipótesis, en voz serif (es la "teoría" del estudio). */}
@@ -74,7 +78,10 @@ export function Findings() {
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-                  transition={{ duration: 0.5, delay: 0.8 + (index % 2) * 0.12 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.8 + (index % 2) * 0.12,
+                  }}
                   className="mt-5 border-t border-hairline pt-4 font-sans text-sm leading-relaxed text-ink-soft"
                 >
                   <span className="mr-2 font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-moss">

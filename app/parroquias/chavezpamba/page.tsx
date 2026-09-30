@@ -52,7 +52,7 @@ export default function ChavezpambaPage() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-paper/85 via-paper/60 to-paper"
+          className="absolute inset-0 bg-linear-to-b from-paper/85 via-paper/60 to-paper"
         />
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -67,7 +67,8 @@ export default function ChavezpambaPage() {
             {caseStudy.name}
           </h1>
           <p className="mt-3 font-sans text-sm text-ink-soft">
-            {caseStudy.province} · {caseStudy.distance[lang]} · {caseStudy.altitude}
+            {caseStudy.province} · {caseStudy.distance[lang]} ·{" "}
+            {caseStudy.altitude}
           </p>
           <p className="mt-8 font-serif text-xl font-light italic leading-relaxed text-ink-soft">
             {caseStudy.tagline[lang]}
@@ -93,7 +94,7 @@ export default function ChavezpambaPage() {
 
       {/* ── Narrativa del pilotaje ────────────────────────────────────── */}
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-prose space-y-8">
+        <div className="mx-auto max-w-lectura space-y-8">
           {caseStudy.body[lang].map((paragraph, index) => (
             <motion.p
               key={index}
@@ -120,7 +121,11 @@ export default function ChavezpambaPage() {
           </h2>
           {caseStudy.podcastUrl ? (
             /* Con URL real: reproductor nativo (o cambiar por embed). */
-            <audio controls src={caseStudy.podcastUrl} className="mt-6 w-full" />
+            <audio
+              controls
+              src={caseStudy.podcastUrl}
+              className="mt-6 w-full"
+            />
           ) : (
             /* ⚠️ PLACEHOLDER: definir podcastUrl en data/caseStudy.ts. */
             <div className="mt-6 flex items-center gap-4 rounded-sm border border-dashed border-hairline px-5 py-4">

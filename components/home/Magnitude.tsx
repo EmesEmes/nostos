@@ -5,15 +5,6 @@ import { motion, useInView } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
-/**
- * 3. La Magnitud — contexto nacional.
- * Transición de lo individual a lo nacional: un solo dato grande
- * (contador animado) antes de entrar al mapa.
- *
- * El contador usa requestAnimationFrame con easing ease-out y arranca al
- * entrar en viewport (una sola vez). Con prefers-reduced-motion muestra
- * el valor final de inmediato, sin animación.
- */
 function Counter({ target }: { target: number }) {
   const reducedMotion = usePrefersReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
@@ -21,13 +12,7 @@ function Counter({ target }: { target: number }) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!inView) return;
-
-    // Movimiento reducido: valor final directo, sin conteo.
-    if (reducedMotion) {
-      setValue(target);
-      return;
-    }
+    if (!inView || reducedMotion) return;
 
     const duration = 1600; // ms
     let start: number | null = null;
@@ -45,9 +30,11 @@ function Counter({ target }: { target: number }) {
     return () => cancelAnimationFrame(frame);
   }, [inView, target, reducedMotion]);
 
+  const display = reducedMotion ? target : value;
+
   return (
     <span ref={ref} aria-label={String(target)}>
-      {value}
+      {display}
     </span>
   );
 }
@@ -68,7 +55,6 @@ export function Magnitude() {
           {t.magnitude.title}
         </motion.h2>
 
-        {/* PLACEHOLDER: cifra nacional de ejemplo (lib/translations.ts). */}
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -88,7 +74,7 @@ export function Magnitude() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -15% 0px" }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-          className="mx-auto mt-12 max-w-prose font-sans text-base leading-relaxed text-ink-soft"
+          className="mx-auto mt-12 max-w-lectura font-sans text-base leading-relaxed text-ink-soft"
         >
           {t.magnitude.body}
         </motion.p>

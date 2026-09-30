@@ -91,12 +91,15 @@ export function Participate() {
   };
 
   return (
-    <section id="participa" className="border-t border-hairline px-6 py-24 sm:py-28">
+    <section
+      id="participa"
+      className="border-t border-hairline px-6 py-24 sm:py-28"
+    >
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center font-serif text-3xl font-light text-ink sm:text-4xl">
           {t.participate.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-prose text-center font-sans text-base leading-relaxed text-ink-soft">
+        <p className="mx-auto mt-4 max-w-lectura text-center font-sans text-base leading-relaxed text-ink-soft">
           {t.participate.intro}
         </p>
 
@@ -115,7 +118,9 @@ export function Participate() {
                   <input
                     type="text"
                     value={contact.name}
-                    onChange={(e) => setContact({ ...contact, name: e.target.value })}
+                    onChange={(e) =>
+                      setContact({ ...contact, name: e.target.value })
+                    }
                     className={inputClass}
                     autoComplete="name"
                   />
@@ -127,7 +132,9 @@ export function Participate() {
                   <input
                     type="email"
                     value={contact.email}
-                    onChange={(e) => setContact({ ...contact, email: e.target.value })}
+                    onChange={(e) =>
+                      setContact({ ...contact, email: e.target.value })
+                    }
                     className={inputClass}
                     autoComplete="email"
                   />
@@ -140,7 +147,9 @@ export function Participate() {
                 </span>
                 <select
                   value={contact.reason}
-                  onChange={(e) => setContact({ ...contact, reason: e.target.value })}
+                  onChange={(e) =>
+                    setContact({ ...contact, reason: e.target.value })
+                  }
                   className={inputClass}
                 >
                   <option value="suggestion">
@@ -159,7 +168,9 @@ export function Participate() {
                 <textarea
                   rows={5}
                   value={contact.message}
-                  onChange={(e) => setContact({ ...contact, message: e.target.value })}
+                  onChange={(e) =>
+                    setContact({ ...contact, message: e.target.value })
+                  }
                   className={inputClass}
                 />
               </label>
@@ -168,7 +179,9 @@ export function Participate() {
               <input
                 type="text"
                 value={contact.website}
-                onChange={(e) => setContact({ ...contact, website: e.target.value })}
+                onChange={(e) =>
+                  setContact({ ...contact, website: e.target.value })
+                }
                 className="hidden"
                 tabIndex={-1}
                 autoComplete="off"

@@ -54,7 +54,7 @@ export default function AlexisVallejoPage() {
 
       {/* ── Bio ───────────────────────────────────────────────────────── */}
       <section className="border-t border-hairline px-6 py-16">
-        <div className="mx-auto max-w-prose space-y-7">
+        <div className="mx-auto max-w-lectura space-y-7">
           {member.bio.map((paragraph, index) => (
             <motion.p
               key={index}
