@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
+import { collectFieldErrors } from "@/lib/content-validation";
 
 export type AuthorFormState = {
   error: string | null;
@@ -51,12 +52,10 @@ export async function saveAuthor(
   });
 
   if (!parsed.success) {
-    const fieldErrors: Partial<Record<string, string>> = {};
-    for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0]);
-      fieldErrors[key] ??= issue.message;
-    }
-    return { error: "Revisa los campos marcados.", fieldErrors };
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: collectFieldErrors(parsed.error.issues),
+    };
   }
 
   const { error } =

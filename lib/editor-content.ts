@@ -1,10 +1,6 @@
 import Image from "@tiptap/extension-image";
 import StarterKit from "@tiptap/starter-kit";
-
-export const INVESTIGATION_IMAGE_PREFIX = "investigations/";
-
-const IMAGE_PATH_PATTERN =
-  /^investigations\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp|avif)$/;
+import { isValidImagePath, storageUrl } from "@/lib/storage-paths";
 
 export const StorageImage = Image.extend({
   addAttributes() {
@@ -36,14 +32,6 @@ type DocNode = {
   content?: DocNode[];
   [key: string]: unknown;
 };
-
-export function storageUrl(path: string) {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/${path}`;
-}
-
-export function isValidImagePath(path: unknown): path is string {
-  return typeof path === "string" && IMAGE_PATH_PATTERN.test(path);
-}
 
 function mapImages(
   node: DocNode,

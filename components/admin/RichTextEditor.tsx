@@ -9,15 +9,14 @@ import {
 } from "@tiptap/react";
 import { Placeholder } from "@tiptap/extensions";
 import { contentExtensions } from "@/lib/editor-content";
-import {
-  ACCEPTED_IMAGE_TYPES,
-  uploadInvestigationImage,
-} from "@/lib/image-upload";
+import { ACCEPTED_IMAGE_TYPES, uploadImage } from "@/lib/media-upload";
+import type { ImageFolder } from "@/lib/storage-paths";
 
 type Props = {
   label: string;
   initialContent: JSONContent | null;
   onChange: (content: JSONContent) => void;
+  imageFolder?: ImageFolder;
 };
 
 const emptyState = {
@@ -51,7 +50,12 @@ function normalizeUrl(value: string) {
   return `https://${url}`;
 }
 
-export function RichTextEditor({ label, initialContent, onChange }: Props) {
+export function RichTextEditor({
+  label,
+  initialContent,
+  onChange,
+  imageFolder = "investigations",
+}: Props) {
   const fileInput = useRef<HTMLInputElement>(null);
   const insertImageRef = useRef<(file: File) => void>(() => {});
   const [uploading, setUploading] = useState(false);
@@ -117,7 +121,7 @@ export function RichTextEditor({ label, initialContent, onChange }: Props) {
       setUploadError(null);
       setUploading(true);
       try {
-        const { path, url } = await uploadInvestigationImage(file);
+        const { path, url } = await uploadImage(file, imageFolder);
         editor
           .chain()
           .focus()
@@ -137,7 +141,7 @@ export function RichTextEditor({ label, initialContent, onChange }: Props) {
         if (fileInput.current) fileInput.current.value = "";
       }
     },
-    [editor],
+    [editor, imageFolder],
   );
 
   useEffect(() => {

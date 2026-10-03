@@ -14,7 +14,7 @@ const sections = [
   {
     title: "Lugares de estudio",
     description: "Ficha, audio, galería y testimonios de cada lugar.",
-    href: null,
+    href: "/admin/lugares",
   },
 ];
 

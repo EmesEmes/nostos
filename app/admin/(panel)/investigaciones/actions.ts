@@ -4,15 +4,17 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
-import { collectImagePaths, stripImageUrls } from "@/lib/editor-content";
-import type { Json } from "@/lib/supabase/database.types";
+import { collectImagePaths } from "@/lib/editor-content";
+import {
+  collectFieldErrors,
+  parseEditorContent,
+} from "@/lib/content-validation";
+import { removeUnusedFiles } from "@/lib/storage-cleanup";
 
 export type InvestigationFormState = {
   error: string | null;
   fieldErrors: Partial<Record<string, string>>;
 };
-
-const MAX_CONTENT_LENGTH = 1_000_000;
 
 const fieldsSchema = z.object({
   title_es: z
@@ -35,43 +37,7 @@ const fieldsSchema = z.object({
   author_id: z.uuid("Selecciona un autor."),
 });
 
-const docSchema = z.looseObject({
-  type: z.literal("doc"),
-  content: z.array(z.unknown()).optional(),
-});
-
 const idSchema = z.uuid();
-
-function parseContent(raw: FormDataEntryValue | null): Json | null | undefined {
-  if (typeof raw !== "string" || raw === "") return null;
-  if (raw.length > MAX_CONTENT_LENGTH) return undefined;
-  try {
-    const parsed = docSchema.safeParse(JSON.parse(raw));
-    return parsed.success ? stripImageUrls(parsed.data as Json) : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-type AdminClient = Awaited<ReturnType<typeof requireAdmin>>["supabase"];
-
-async function removeUnusedImages(
-  supabase: AdminClient,
-  candidates: Set<string>,
-) {
-  if (candidates.size === 0) return;
-
-  const { data: all } = await supabase
-    .from("investigations")
-    .select("content_es, content_en");
-  if (!all) return;
-
-  const inUse = collectImagePaths(
-    ...all.flatMap((row) => [row.content_es, row.content_en]),
-  );
-  const unused = [...candidates].filter((path) => !inUse.has(path));
-  if (unused.length > 0) await supabase.storage.from("media").remove(unused);
-}
 
 function revalidateInvestigation(...slugs: string[]) {
   revalidatePath("/admin/investigaciones");
@@ -109,16 +75,14 @@ export async function saveInvestigation(
   });
 
   if (!parsed.success) {
-    const fieldErrors: Partial<Record<string, string>> = {};
-    for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0]);
-      fieldErrors[key] ??= issue.message;
-    }
-    return { error: "Revisa los campos marcados.", fieldErrors };
+    return {
+      error: "Revisa los campos marcados.",
+      fieldErrors: collectFieldErrors(parsed.error.issues),
+    };
   }
 
-  const contentEs = parseContent(formData.get("content_es"));
-  const contentEn = parseContent(formData.get("content_en"));
+  const contentEs = parseEditorContent(formData.get("content_es"));
+  const contentEn = parseEditorContent(formData.get("content_en"));
   if (contentEs === undefined || contentEn === undefined) {
     return { error: "El contenido del texto no es válido.", fieldErrors: {} };
   }
@@ -169,7 +133,7 @@ export async function saveInvestigation(
     const removed = [
       ...collectImagePaths(current.content_es, current.content_en),
     ].filter((path) => !kept.has(path));
-    await removeUnusedImages(supabase, new Set(removed));
+    await removeUnusedFiles(supabase, removed);
   }
 
   revalidateInvestigation(...slugs);
@@ -190,7 +154,7 @@ export async function deleteInvestigation(id: string) {
 
   if (error) return { error: "No se pudo eliminar. Intenta de nuevo." };
   if (data) {
-    await removeUnusedImages(
+    await removeUnusedFiles(
       supabase,
       collectImagePaths(data.content_es, data.content_en),
     );
