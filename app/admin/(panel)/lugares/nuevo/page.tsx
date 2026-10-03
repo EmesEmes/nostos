@@ -16,9 +16,12 @@ export default async function NewSitePage() {
       >
         ← Lugares de estudio
       </Link>
-      <h1 className="mt-2 mb-10 font-serif text-3xl font-light text-ink">
+      <h1 className="mt-2 font-serif text-3xl font-light text-ink">
         Nuevo lugar
       </h1>
+      <p className="mt-2 mb-10 font-sans text-sm text-ink-soft">
+        Al guardar el lugar podrás agregarle su galería de fotos.
+      </p>
       <SiteForm
         initial={{
           id: null,

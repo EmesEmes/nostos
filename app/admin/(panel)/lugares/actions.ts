@@ -187,8 +187,14 @@ export async function saveSite(
   };
 
   if (id === null) {
-    const { error } = await supabase.from("study_sites").insert(values);
+    const { data, error } = await supabase
+      .from("study_sites")
+      .insert(values)
+      .select("id")
+      .single();
     if (error) return error.code === "23505" ? slugTaken : saveFailed;
+    revalidateSites();
+    redirect(`/admin/lugares/${data.id}?creado=1`);
   } else {
     const { data: current } = await supabase
       .from("study_sites")
