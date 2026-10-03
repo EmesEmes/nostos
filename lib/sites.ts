@@ -6,7 +6,8 @@ export const getPublishedSites = cache(async () => {
   const { data, error } = await createPublicClient()
     .from("study_sites")
     .select(
-      "slug, name, kind, province, tagline_es, tagline_en, summary_es, summary_en, cover_path",
+      `slug, name, kind, province, province_id, zone_id, annual_rate, population_now, population_2050,
+       change_pct, distance_es, distance_en, tagline_es, tagline_en, summary_es, summary_en, cover_path`,
     )
     .eq("published", true)
     .order("sort_order")
@@ -20,7 +21,7 @@ export const getPublishedSite = cache(async (slug: string) => {
   const { data, error } = await createPublicClient()
     .from("study_sites")
     .select(
-      `slug, name, kind, province, annual_rate, population_now, population_2050, change_pct, altitude,
+      `slug, name, kind, province, zone_id, annual_rate, population_now, population_2050, change_pct, altitude,
        distance_es, distance_en, tagline_es, tagline_en, summary_es, summary_en, content_es, content_en,
        cover_path, audio_path, audio_title_es, audio_title_en,
        site_images(id, path, alt_es, alt_en, caption_es, caption_en, sort_order),

@@ -9,21 +9,27 @@ import { CaseStudy } from "@/components/home/CaseStudy";
 import { CantonsGrid } from "@/components/home/CantonsGrid";
 import { Closing } from "@/components/home/Closing";
 import { Participate } from "@/components/home/Participate";
+import { HomeSitesProvider } from "@/components/home/HomeSites";
+import { getPublishedSites } from "@/lib/sites";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const sites = await getPublishedSites();
+
   return (
-    <main>
-      <Hero />
-      <TheProblem />
-      <MapSection />
-      <Statement />
-      <Magnitude />
-      <Numbers />
-      <Findings />
-      <CaseStudy />
-      <CantonsGrid />
-      <Closing />
-      <Participate />
-    </main>
+    <HomeSitesProvider sites={sites}>
+      <main>
+        <Hero />
+        <TheProblem />
+        <MapSection />
+        <Statement />
+        <Magnitude />
+        <Numbers />
+        <Findings />
+        <CaseStudy />
+        <CantonsGrid />
+        <Closing />
+        <Participate />
+      </main>
+    </HomeSitesProvider>
   );
 }

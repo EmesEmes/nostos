@@ -16,6 +16,20 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: "/parroquias/:slug",
+        destination: "/lugares/:slug",
+        permanent: true,
+      },
+      {
+        source: "/cantones/:slug",
+        destination: "/lugares/:slug",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

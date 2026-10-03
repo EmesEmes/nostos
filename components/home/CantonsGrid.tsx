@@ -3,16 +3,15 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
-import { cantons } from "@/data/cantons";
+import { useStudyCantons } from "@/components/home/HomeSites";
 
-/**
- * Los diez cantones con mayor decrecimiento (datos reales del análisis
- * 1990–2022). Cada tarjeta enlaza a /cantones/[slug].
- */
 export function CantonsGrid() {
   const { t, lang } = useLanguage();
+  const cantons = useStudyCantons();
   const rateFormat = (rate: number) =>
     `${rate.toFixed(2).replace(".", lang === "es" ? "," : ".")}%`;
+
+  if (cantons.length === 0) return null;
 
   return (
     <section
@@ -41,7 +40,7 @@ export function CantonsGrid() {
               }}
             >
               <Link
-                href={`/cantones/${canton.slug}`}
+                href={`/lugares/${canton.slug}`}
                 className="group flex h-full flex-col border border-hairline bg-paper p-5 transition-colors duration-300 hover:border-moss"
               >
                 <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-ink-soft">
@@ -50,9 +49,8 @@ export function CantonsGrid() {
                 <h3 className="mt-1 font-serif text-lg font-medium leading-snug text-ink">
                   {canton.name}
                 </h3>
-                {/* El dato manda: la tasa anual, grande. */}
                 <p className="mt-4 font-serif text-3xl font-light tabular-nums text-moss-dark">
-                  {rateFormat(canton.rate)}
+                  {rateFormat(canton.annual_rate)}
                 </p>
                 <p className="font-sans text-[10px] uppercase tracking-[0.15em] text-ink-soft">
                   {t.cantonsGrid.rateShort} · 1990–2022

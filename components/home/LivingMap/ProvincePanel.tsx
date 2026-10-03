@@ -11,30 +11,8 @@ import {
   type Dynamic,
 } from "@/data/provinceDynamics";
 import { zones } from "@/data/cantonalStudy";
-import { cantons } from "@/data/cantons";
-import { caseStudy } from "@/data/caseStudy";
+import { useHomeSites } from "@/components/home/HomeSites";
 import type { Lang } from "@/lib/translations";
-
-/**
- * Panel lateral de la provincia seleccionada en el mapa 2D.
- * Muestra SOLO datos reales:
- *  - su categoría de dinámica poblacional 1990–2022 (provinceDynamics.ts);
- *  - si la provincia tiene el estudio de caso (data/caseStudy.ts, hoy solo
- *    Chavezpamba/Pichincha), una ficha con enlace a su página propia —
- *    se muestra AUNQUE la provincia esté en crecimiento y sin cantones en
- *    decrecimiento, porque el trabajo de campo ahí sí existe;
- *  - si pertenece a una de las 4 zonas del estudio cantonal
- *    (cantonalStudy.ts), su narrativa real y la lista de cantones de esa
- *    zona (enlazados a /cantones/[slug] cuando tienen página propia,
- *    igual que los "cantones vecinos" de CantonProfile.tsx);
- *  - si no hay ni estudio de caso ni zona (la mayoría, en crecimiento),
- *    lo dice con honestidad en vez de dejar el panel vacío.
- * Cierre: click fuera, Escape o botón; foco inicial en el cierre.
- *
- * Nota: cuando se generalice a data/parishes.ts (varias parroquias, ver
- * plan pendiente), este chequeo de una sola caseStudy pasa a un
- * `parishes.filter(p => p.provinceId === province.id)`.
- */
 
 type Props = {
   province: ProvinceShape | null;
@@ -53,6 +31,7 @@ const legendKeyByDynamic: Record<
 
 export function ProvincePanel({ province, lang, onClose }: Props) {
   const { t } = useLanguage();
+  const sites = useHomeSites();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -74,8 +53,11 @@ export function ProvincePanel({ province, lang, onClose }: Props) {
   const zone = province
     ? (zones.find((z) => z.provinces.includes(province.id)) ?? null)
     : null;
-  const caseStudyHere =
-    province && caseStudy.provinceId === province.id ? caseStudy : null;
+  const caseStudyHere = province
+    ? (sites.find(
+        (site) => site.kind === "parroquia" && site.province_id === province.id,
+      ) ?? null)
+    : null;
 
   const rateFormat = (rate: number) =>
     `${rate > 0 ? "+" : ""}${rate.toFixed(2).replace(".", lang === "es" ? "," : ".")}%`;
@@ -150,10 +132,11 @@ export function ProvincePanel({ province, lang, onClose }: Props) {
                   {caseStudyHere.name}
                 </h4>
                 <p className="mt-3 font-serif text-base font-light italic leading-relaxed text-ink-soft">
-                  {caseStudyHere.tagline[lang]}
+                  {(lang === "en" && caseStudyHere.tagline_en) ||
+                    caseStudyHere.tagline_es}
                 </p>
                 <Link
-                  href={`/parroquias/${caseStudyHere.slug}`}
+                  href={`/lugares/${caseStudyHere.slug}`}
                   className="mt-5 inline-block border-b border-moss pb-1 font-sans text-sm text-moss-dark transition-colors duration-200 hover:border-moss-dark"
                 >
                   {t.caseStudy.visit} →
@@ -182,8 +165,8 @@ export function ProvincePanel({ province, lang, onClose }: Props) {
                     </p>
                     <ul className="mt-4 space-y-1.5 border-t border-hairline pt-4">
                       {zone.cantons.map((canton) => {
-                        const linked = cantons.find(
-                          (c) => c.name === canton.name,
+                        const linked = sites.find(
+                          (site) => site.name === canton.name,
                         );
                         const row = (
                           <>
@@ -206,7 +189,7 @@ export function ProvincePanel({ province, lang, onClose }: Props) {
                           <li key={canton.name}>
                             {linked ? (
                               <Link
-                                href={`/cantones/${linked.slug}`}
+                                href={`/lugares/${linked.slug}`}
                                 className="flex items-baseline justify-between gap-3 transition-colors duration-200 hover:text-moss-dark"
                               >
                                 {row}

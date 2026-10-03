@@ -5,6 +5,7 @@ import { hasContent } from "@/lib/editor-content";
 import { storageUrl } from "@/lib/storage-paths";
 import { RichText } from "@/components/RichText";
 import { SiteArticle } from "@/components/sites/SiteArticle";
+import { zones } from "@/data/cantonalStudy";
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -43,10 +44,21 @@ export default async function SitePage({
   if (!site) notFound();
 
   const { site_images, testimonies, content_es, content_en, ...rest } = site;
+  const zone = zones.find((item) => item.id === site.zone_id);
+  const published = zone ? await getPublishedSites() : [];
+  const neighbors = (zone?.cantons ?? [])
+    .filter((canton) => canton.name !== site.name)
+    .map((canton) => ({
+      name: canton.name,
+      rate: canton.rate,
+      slug: published.find((item) => item.name === canton.name)?.slug ?? null,
+    }));
 
   return (
     <SiteArticle
       site={{ ...rest, images: site_images, testimonies }}
+      neighbors={neighbors}
+      hasSpanishBody={hasContent(content_es)}
       hasEnglishBody={hasContent(content_en)}
       bodyEs={<RichText content={content_es} />}
       bodyEn={<RichText content={content_en} />}

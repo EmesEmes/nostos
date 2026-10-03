@@ -7,6 +7,7 @@ import {
   SiteGalleryView,
   type PublicImage,
 } from "@/components/sites/SiteGalleryView";
+import { zones } from "@/data/cantonalStudy";
 
 export type PublicTestimony = {
   id: string;
@@ -19,7 +20,10 @@ export type PublicTestimony = {
   audio_path: string | null;
 };
 
+export type ZoneNeighbor = { name: string; rate: number; slug: string | null };
+
 export type PublicSite = {
+  zone_id: string | null;
   name: string;
   kind: string;
   province: string;
@@ -44,6 +48,8 @@ export type PublicSite = {
 
 type Props = {
   site: PublicSite;
+  neighbors: ZoneNeighbor[];
+  hasSpanishBody: boolean;
   hasEnglishBody: boolean;
   bodyEs: React.ReactNode;
   bodyEn: React.ReactNode;
@@ -51,7 +57,14 @@ type Props = {
 
 const sectionLabel = "font-sans text-xs uppercase tracking-[0.25em] text-moss";
 
-export function SiteArticle({ site, hasEnglishBody, bodyEs, bodyEn }: Props) {
+export function SiteArticle({
+  site,
+  neighbors,
+  hasSpanishBody,
+  hasEnglishBody,
+  bodyEs,
+  bodyEn,
+}: Props) {
   const { lang, t } = useLanguage();
   const english = lang === "en";
   const locale = english ? "en-US" : "es-EC";
@@ -108,6 +121,12 @@ export function SiteArticle({ site, hasEnglishBody, bodyEs, bodyEn }: Props) {
     site.kind === "canton"
       ? t.sitesPage.kind.canton
       : t.sitesPage.kind.parroquia;
+  const zone = zones.find((item) => item.id === site.zone_id) ?? null;
+  const rateFormat = (rate: number) => `${decimal.format(rate)} %`;
+  const awaitingFieldwork =
+    !hasSpanishBody &&
+    site.images.length === 0 &&
+    site.testimonies.length === 0;
 
   return (
     <main className="pb-24 pt-28 sm:pt-36">
@@ -185,14 +204,85 @@ export function SiteArticle({ site, hasEnglishBody, bodyEs, bodyEn }: Props) {
             </p>
           )}
 
-          <div className="mt-12">
-            {english && !hasEnglishBody && (
-              <p className="mb-10 rounded-sm border border-hairline bg-paper-alt px-4 py-3 font-sans text-sm text-ink-soft">
-                {t.sitesPage.onlySpanish}
+          {hasSpanishBody && (
+            <div className="mt-12">
+              {english && !hasEnglishBody && (
+                <p className="mb-10 rounded-sm border border-hairline bg-paper-alt px-4 py-3 font-sans text-sm text-ink-soft">
+                  {t.sitesPage.onlySpanish}
+                </p>
+              )}
+              {english && hasEnglishBody ? bodyEn : bodyEs}
+            </div>
+          )}
+
+          {zone && (
+            <section className="mt-16 border-t border-hairline pt-10">
+              <p className={sectionLabel}>{t.cantonPage.zoneTitle}</p>
+              <h2 className="mt-3 font-serif text-2xl font-light text-ink">
+                {zone.title[lang]}
+              </h2>
+              <p className="mt-4 font-sans text-base leading-relaxed text-ink">
+                {zone.narrative[lang]}
               </p>
-            )}
-            {english && hasEnglishBody ? bodyEn : bodyEs}
-          </div>
+
+              {neighbors.length > 0 && (
+                <>
+                  <h3 className="mt-10 font-sans text-xs uppercase tracking-[0.25em] text-ink-soft">
+                    {t.cantonPage.othersTitle}
+                  </h3>
+                  <ul className="mt-4 space-y-1.5 border-t border-hairline pt-4">
+                    {neighbors.map((neighbor) => {
+                      const row = (
+                        <>
+                          <span className="font-sans text-sm text-ink">
+                            {neighbor.name}
+                          </span>
+                          <span className="flex-1 border-b border-dotted border-hairline" />
+                          <span
+                            className={`font-serif text-sm tabular-nums ${
+                              neighbor.rate <= -1
+                                ? "font-medium text-moss-dark"
+                                : "text-ink"
+                            }`}
+                          >
+                            {rateFormat(neighbor.rate)}
+                          </span>
+                        </>
+                      );
+                      return (
+                        <li key={neighbor.name}>
+                          {neighbor.slug ? (
+                            <Link
+                              href={`/lugares/${neighbor.slug}`}
+                              className="flex items-baseline justify-between gap-3 transition-colors duration-200 hover:text-moss-dark"
+                            >
+                              {row}
+                            </Link>
+                          ) : (
+                            <div className="flex items-baseline justify-between gap-3">
+                              {row}
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <p className="mt-4 font-sans text-xs text-ink-soft">
+                    {t.cantonal.sourceNote}
+                  </p>
+                </>
+              )}
+            </section>
+          )}
+
+          {awaitingFieldwork && (
+            <section className="mt-16 rounded-sm border border-hairline bg-paper-alt px-6 py-8 text-center">
+              <p className={sectionLabel}>{t.cantonPage.fieldworkTitle}</p>
+              <p className="mt-4 font-serif text-lg font-light italic leading-relaxed text-ink-soft">
+                {t.cantonPage.fieldworkNote}
+              </p>
+            </section>
+          )}
         </div>
 
         {site.images.length > 0 && (

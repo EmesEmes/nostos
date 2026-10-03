@@ -13,7 +13,8 @@ import {
   YAxis,
 } from "recharts";
 import { useLanguage } from "@/lib/LanguageContext";
-import { cantons, persistentByCategory } from "@/data/cantons";
+import { persistentByCategory } from "@/data/cantonCategories";
+import { useStudyCantons } from "@/components/home/HomeSites";
 import { zones } from "@/data/cantonalStudy";
 
 /**
@@ -71,11 +72,11 @@ function ChartBlock({
  *  despoblación persistente, y promedio por zona del scrollytelling. */
 function useChartPanels() {
   const { t, lang } = useLanguage();
+  const cantons = useStudyCantons();
 
-  // 1) Los diez cantones con mayor decrecimiento (tasa anual).
   const topTen = cantons.map((canton) => ({
     name: canton.name,
-    rate: canton.rate,
+    rate: canton.annual_rate,
     province: canton.province,
   }));
 
